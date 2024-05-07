@@ -22,10 +22,11 @@ class TrendLine {
 }
 
 class HorizontalLine {
-  final Color color;
   final double value;
+  final Color color;
+  final String prefixText;
 
-  HorizontalLine(this.color, this.value);
+  HorizontalLine(this.value, this.color, {this.prefixText = ""});
 }
 
 double? trendLineX;
@@ -445,23 +446,24 @@ class ChartPainter extends BaseChartPainter {
   @override
   void drawHorizontalLines(Canvas canvas) {
     if (this.horizontalLines != null) {
-      this.horizontalLines!.forEach((HorizontalLine line) =>
-          this.drawVerticalLine(canvas, line.value, line.color));
+      this.horizontalLines!.forEach(
+          (HorizontalLine line) => this.drawHorizontalLine(canvas, line));
     }
   }
 
   @override
   void drawNowPrice(Canvas canvas) {
     double value = datas!.last.close;
-    this.drawVerticalLine(
+    this.drawHorizontalLine(
         canvas,
-        value,
-        value >= datas!.last.open
-            ? this.chartColors.nowPriceUpColor
-            : this.chartColors.nowPriceDnColor);
+        new HorizontalLine(
+            value,
+            value >= datas!.last.open
+                ? this.chartColors.nowPriceUpColor
+                : this.chartColors.nowPriceDnColor));
   }
 
-  void drawVerticalLine(Canvas canvas, double value, Color color) {
+  void drawHorizontalLine(Canvas canvas, HorizontalLine line) {
     if (!this.showNowPrice) {
       return;
     }
@@ -470,7 +472,7 @@ class ChartPainter extends BaseChartPainter {
       return;
     }
 
-    double y = getMainY(value);
+    double y = getMainY(line.value);
 
     //Zeigen Sie die Grenzwertzeichnung des Anzeigebereichs an
     if (y > getMainY(mMainLowMinValue)) {
@@ -481,7 +483,7 @@ class ChartPainter extends BaseChartPainter {
       y = getMainY(mMainHighMaxValue);
     }
 
-    nowPricePaint..color = color;
+    nowPricePaint..color = line.color;
     //Zeichnen Sie zuerst horizontale Linien
     double startX = 0;
     final max = -mTranslateX + mWidth / scaleX;
@@ -496,7 +498,8 @@ class ChartPainter extends BaseChartPainter {
     }
     //Zeichnen Sie den Hintergrund und den Text erneut
     TextPainter tp = getTextPainter(
-        value.toStringAsFixed(fixedLength), this.chartColors.nowPriceTextColor);
+        line.prefixText + line.value.toStringAsFixed(fixedLength),
+        this.chartColors.nowPriceTextColor);
 
     double offsetX;
     switch (verticalTextAlignment) {

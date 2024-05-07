@@ -118,8 +118,8 @@ class _MyHomePageState extends State<MyHomePage> {
               translations: kChartTranslations,
               showNowPrice: _showNowPrice,
               horizontalLines: [
-                HorizontalLine(Colors.blue, 61000),
-                HorizontalLine(Colors.red, 59000)
+                HorizontalLine(61000, Colors.blue),
+                HorizontalLine(59000, Colors.red, prefixText: "Safety: ")
               ],
               //`isChinese` is Deprecated, Use `translations` instead.
               isChinese: isChinese,
