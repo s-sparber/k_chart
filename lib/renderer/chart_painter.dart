@@ -453,6 +453,10 @@ class ChartPainter extends BaseChartPainter {
 
   @override
   void drawNowPrice(Canvas canvas) {
+    if (!this.showNowPrice) {
+      return;
+    }
+    
     double value = datas!.last.close;
     this.drawHorizontalLine(
         canvas,
@@ -464,10 +468,6 @@ class ChartPainter extends BaseChartPainter {
   }
 
   void drawHorizontalLine(Canvas canvas, HorizontalLine line) {
-    if (!this.showNowPrice) {
-      return;
-    }
-
     if (datas == null) {
       return;
     }
