@@ -119,7 +119,10 @@ abstract class BaseChartPainter extends CustomPainter {
 
       drawText(canvas, datas!.last, 5);
       drawMaxAndMin(canvas);
+      drawHorizontalLines(canvas);
+
       drawNowPrice(canvas);
+
 
       if (isLongPress == true || (isTapShowInfoDialog && isOnTap)) {
         drawCrossLineText(canvas, size);
@@ -150,6 +153,9 @@ abstract class BaseChartPainter extends CustomPainter {
 
   //画最大最小值
   void drawMaxAndMin(Canvas canvas);
+
+  // addition s-sparber
+  void drawHorizontalLines(Canvas canvas);
 
   //画当前价格
   void drawNowPrice(Canvas canvas);

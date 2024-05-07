@@ -36,6 +36,7 @@ class KChartWidget extends StatefulWidget {
   @Deprecated('Use `translations` instead.')
   final bool isChinese;
   final bool showNowPrice;
+  final List<HorizontalLine>? horizontalLines;
   final bool showInfoDialog;
   final bool materialInfoDialog; // Material风格的信息弹窗
   final Map<String, ChartTranslations> translations;
@@ -71,6 +72,7 @@ class KChartWidget extends StatefulWidget {
     this.hideGrid = false,
     @Deprecated('Use `translations` instead.') this.isChinese = false,
     this.showNowPrice = true,
+    this.horizontalLines,
     this.showInfoDialog = true,
     this.materialInfoDialog = true,
     this.translations = kChartTranslations,
@@ -156,6 +158,7 @@ class _KChartWidgetState extends State<KChartWidget>
       isLine: widget.isLine,
       hideGrid: widget.hideGrid,
       showNowPrice: widget.showNowPrice,
+      horizontalLines: widget.horizontalLines,
       sink: mInfoWindowStream?.sink,
       fixedLength: widget.fixedLength,
       maDayList: widget.maDayList,

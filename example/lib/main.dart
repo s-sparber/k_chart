@@ -117,6 +117,10 @@ class _MyHomePageState extends State<MyHomePage> {
               timeFormat: TimeFormat.YEAR_MONTH_DAY,
               translations: kChartTranslations,
               showNowPrice: _showNowPrice,
+              horizontalLines: [
+                HorizontalLine(Colors.blue, 61000),
+                HorizontalLine(Colors.red, 59000)
+              ],
               //`isChinese` is Deprecated, Use `translations` instead.
               isChinese: isChinese,
               hideGrid: _hideGrid,

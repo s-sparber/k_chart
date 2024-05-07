@@ -21,6 +21,13 @@ class TrendLine {
   TrendLine(this.p1, this.p2, this.maxHeight, this.scale);
 }
 
+class HorizontalLine {
+  final Color color;
+  final double value;
+
+  HorizontalLine(this.color, this.value);
+}
+
 double? trendLineX;
 
 double getTrendLineX() {
@@ -48,6 +55,7 @@ class ChartPainter extends BaseChartPainter {
   final bool hideGrid;
   final bool showNowPrice;
   final VerticalTextAlignment verticalTextAlignment;
+  final List<HorizontalLine>? horizontalLines;
 
   ChartPainter(
     this.chartStyle,
@@ -71,6 +79,7 @@ class ChartPainter extends BaseChartPainter {
     bool isLine = false,
     this.hideGrid = false,
     this.showNowPrice = true,
+    this.horizontalLines,
     this.fixedLength = 2,
     this.maDayList = const [5, 10, 20],
   }) : super(chartStyle,
@@ -434,7 +443,25 @@ class ChartPainter extends BaseChartPainter {
   }
 
   @override
+  void drawHorizontalLines(Canvas canvas) {
+    if (this.horizontalLines != null) {
+      this.horizontalLines!.forEach((HorizontalLine line) =>
+          this.drawVerticalLine(canvas, line.value, line.color));
+    }
+  }
+
+  @override
   void drawNowPrice(Canvas canvas) {
+    double value = datas!.last.close;
+    this.drawVerticalLine(
+        canvas,
+        value,
+        value >= datas!.last.open
+            ? this.chartColors.nowPriceUpColor
+            : this.chartColors.nowPriceDnColor);
+  }
+
+  void drawVerticalLine(Canvas canvas, double value, Color color) {
     if (!this.showNowPrice) {
       return;
     }
@@ -443,10 +470,9 @@ class ChartPainter extends BaseChartPainter {
       return;
     }
 
-    double value = datas!.last.close;
     double y = getMainY(value);
 
-    //视图展示区域边界值绘制
+    //Zeigen Sie die Grenzwertzeichnung des Anzeigebereichs an
     if (y > getMainY(mMainLowMinValue)) {
       y = getMainY(mMainLowMinValue);
     }
@@ -455,11 +481,8 @@ class ChartPainter extends BaseChartPainter {
       y = getMainY(mMainHighMaxValue);
     }
 
-    nowPricePaint
-      ..color = value >= datas!.last.open
-          ? this.chartColors.nowPriceUpColor
-          : this.chartColors.nowPriceDnColor;
-    //先画横线
+    nowPricePaint..color = color;
+    //Zeichnen Sie zuerst horizontale Linien
     double startX = 0;
     final max = -mTranslateX + mWidth / scaleX;
     final space =
@@ -471,7 +494,7 @@ class ChartPainter extends BaseChartPainter {
           nowPricePaint);
       startX += space;
     }
-    //再画背景和文本
+    //Zeichnen Sie den Hintergrund und den Text erneut
     TextPainter tp = getTextPainter(
         value.toStringAsFixed(fixedLength), this.chartColors.nowPriceTextColor);
 
